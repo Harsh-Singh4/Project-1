@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "1) Models - a 6 digit number \r 2) Routes - 3 endpoints \r    1) Get Request to get a 6 digit number from db\r    2) Post request to submit a solution \r    3) Post request to ask for solution\r 3) Validation and Solution generation Code",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
