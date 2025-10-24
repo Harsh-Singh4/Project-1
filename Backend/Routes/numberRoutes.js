@@ -26,7 +26,7 @@ router.get('/random',async(req,res)=>{
 
 router.post('/submit',async(req,res)=>{
    try {
-    const sol = req.body.solution;        // solution string
+    const sol = req.body.solution;       
     const numberGot = req.query.number;   // number from previous GET request
 
     if (!numberGot) {
@@ -82,5 +82,62 @@ router.post('/submit',async(req,res)=>{
     res.status(500).json({ message: 'Server error' });
   }
 })
+
+
+router.post('/giveup',async(req,res)=>{
+ try {
+    const numberGot = req.query.number || req.body.number;
+
+    if (!numberGot) {
+      return res.status(400).json({ message: 'Missing number parameter' });
+    }
+
+    // Spawn the compiled Solution executable
+    const solutionProcess = spawn('./Solution/Solution');
+
+    let output = '';
+    let errorOutput = '';
+
+    // Capture stdout
+    solutionProcess.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+
+    // Capture stderr
+    solutionProcess.stderr.on('data', (data) => {
+      errorOutput += data.toString();
+    });
+
+    // Handle process start error
+    solutionProcess.on('error', (err) => {
+      console.error('Failed to start Solution:', err);
+      return res.status(500).json({ message: 'Solution executable not found or failed to start' });
+    });
+
+    // When Solution finishes
+    solutionProcess.on('close', (code) => {
+      if (code !== 0) {
+        console.error('Solution exited with code:', code);
+        console.error('Solution stderr:', errorOutput);
+        return res.status(500).json({ message: 'Solution execution failed' });
+      }
+
+      // Send the C++ program’s output back as response
+      res.json({ output: output.trim() });
+    });
+
+    // Provide numberGot as input to the C++ program
+    solutionProcess.stdin.write(`${numberGot}\n`);
+    solutionProcess.stdin.end();
+
+  } catch (err) {
+    console.error('Unexpected error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+})
+
+
+
+
 
 module.exports=router;
