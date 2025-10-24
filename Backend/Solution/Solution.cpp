@@ -208,6 +208,7 @@ int main() {
 int  s;
 cin>>s;
 cout<<findSolution(to_string(s))<<"\n";
+//
    
     return 0;
 }
