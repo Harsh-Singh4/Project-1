@@ -13,7 +13,8 @@ router.get('/random',async(req,res)=>{
      if (randomNoArray.length === 0) {
       return res.status(404).json({ message: 'No numbers found in DB' });
     }
-    res.json({randomNo});
+    res.json({ randomNo: { number: randomNo.number } });
+
     
     console.log("No fetched successfull :",randomNo);
    }
@@ -68,8 +69,10 @@ router.post('/submit',async(req,res)=>{
       // Validator output should be '1' for correct solution, '0' for wrong
       if (output.trim() === '1') {
         res.json({ message: 'Correct solution!' });
+        console.log("Correct Sol")
       } else {
         res.json({ message: 'Wrong solution.' });
+        console.log("Wrong sol")
       }
     });
 
@@ -124,6 +127,7 @@ router.post('/giveup',async(req,res)=>{
 
       // Send the C++ program’s output back as response
       res.json({ output: output.trim() });
+      console.log(output.trim());
     });
 
     // Provide numberGot as input to the C++ program
